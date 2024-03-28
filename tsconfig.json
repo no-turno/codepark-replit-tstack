@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"useDefineForClassFields": true,
+		"lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"],
+		"module": "ESNext",
+		"skipLibCheck": true,
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
+		"jsxImportSource": "react",
+		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"emitBOM": true,
+		"esModuleInterop": true,
+		"allowArbitraryExtensions": true,
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true
+	},
+	"include": ["src"],
+	"references": [{ "path": "./tsconfig.node.json" }]
+}

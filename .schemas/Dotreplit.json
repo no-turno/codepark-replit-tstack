@@ -1,0 +1,734 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/DotReplit",
+  "$defs": {
+    "AuthConfig": {
+      "properties": {
+        "pageEnabled": {
+          "type": "boolean",
+          "description": "Determines if Repl Auth 2.0 is enabled."
+        },
+        "pageTitle": {
+          "type": "string",
+          "description": "Repl Auth 2.0 page title."
+        },
+        "pageDescription": {
+          "type": "string",
+          "description": "Repl Auth 2.0 page description."
+        },
+        "pageColor": {
+          "type": "string",
+          "description": "Repl Auth 2.0 page color."
+        },
+        "pageImage": {
+          "type": "string",
+          "description": "Repl Auth 2.0 page image."
+        },
+        "buttonEnabled": {
+          "type": "boolean",
+          "description": "Enables Repl Auth 2.0 without enabling the associated page. If `pageEnabled` is enabled, this setting is ignored."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "AutoSaveConfig": {
+      "properties": {
+        "disabled": {
+          "type": "boolean",
+          "description": "When true turns off auto saving. This feature is currently being developed and may not work as expected."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "CompileCommand": {
+      "anyOf": [
+        {
+          "properties": {
+            "args": { "items": { "type": "string" }, "type": "array" },
+            "env": {
+              "additionalProperties": { "type": "string" },
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": ["args"]
+        },
+        { "type": "string" },
+        { "items": { "type": "string" }, "type": "array" }
+      ],
+      "description": "The command to run before the `run` configuration. Expected to compile your project before running it.\n\nOne of a string, list of strings, or table.\n\nIf a string, it will be passed to the shell as `sh -c \u003cstring\u003e`.\n\nIf a list of strings, the list will be evaluated directly.\n\nIf a table, then the `args` field will be evaluated as a list of strings,\nevaluated with the environment variables as defined by the `env` subtable."
+    },
+    "CompileConfig": {
+      "properties": {
+        "command": { "$ref": "#/$defs/DebugCompileCommand" },
+        "onlyMain": { "type": "boolean" },
+        "noFileArgs": { "type": "boolean" }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DAPConfig": {
+      "properties": {
+        "transport": {
+          "type": "string",
+          "description": "How the adapter exposes the DAP communication channel to the debugproxy. Valid values are `\"stdio\"` and something that Go accepts as an argument to `net.Dial()`."
+        },
+        "connectTimeout": {
+          "type": "integer",
+          "description": "The number of seconds that the debugproxy will wait for the port to be available before declaring the initialization failed. Defaults to 15s."
+        },
+        "integratedAdapter": { "$ref": "#/$defs/DAPIntegratedAdapterConfig" },
+        "startCommand": { "$ref": "#/$defs/DAPConfigStartCommand" },
+        "initializeMessage": {
+          "type": "object",
+          "description": "The initialization message for the DAP adapter."
+        },
+        "launchMessage": {
+          "type": "object",
+          "description": "The launch/attach message for the DAP adapter."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DAPConfigStartCommand": {
+      "anyOf": [
+        {
+          "properties": {
+            "args": { "items": { "type": "string" }, "type": "array" },
+            "env": {
+              "additionalProperties": { "type": "string" },
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": ["args"]
+        },
+        { "type": "string" },
+        { "items": { "type": "string" }, "type": "array" }
+      ],
+      "description": "The shell command needed to start the DAP adapter.\n\nOne of a string, list of strings, or table.\n\nIf a string, it will be passed to the shell as `sh -c \u003cstring\u003e`.\n\nIf a list of strings, the list will be evaluated directly.\n\nIf a table, then the `args` field will be evaluated as a list of strings,\nevaluated with the environment variables as defined by the `env` subtable."
+    },
+    "DAPIntegratedAdapterConfig": {
+      "properties": {
+        "dapTcpAddress": {
+          "type": "string",
+          "description": "The TCP socket where the DAP server is listening for connections."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DAPStartCommand": {
+      "anyOf": [
+        {
+          "properties": {
+            "args": { "items": { "type": "string" }, "type": "array" },
+            "env": {
+              "additionalProperties": { "type": "string" },
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": ["args"]
+        },
+        { "type": "string" },
+        { "items": { "type": "string" }, "type": "array" }
+      ],
+      "description": "The shell command needed to start the DAP adapter. Legacy, please prefer `interactive` configuration instead.\n\nOne of a string, list of strings, or table.\n\nIf a string, it will be passed to the shell as `sh -c \u003cstring\u003e`.\n\nIf a list of strings, the list will be evaluated directly.\n\nIf a table, then the `args` field will be evaluated as a list of strings,\nevaluated with the environment variables as defined by the `env` subtable."
+    },
+    "DebugCompileCommand": {
+      "anyOf": [
+        {
+          "properties": {
+            "args": { "items": { "type": "string" }, "type": "array" },
+            "env": {
+              "additionalProperties": { "type": "string" },
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": ["args"]
+        },
+        { "type": "string" },
+        { "items": { "type": "string" }, "type": "array" }
+      ],
+      "description": "The shell command to compile your project for debugging.\n\nOne of a string, list of strings, or table.\n\nIf a string, it will be passed to the shell as `sh -c \u003cstring\u003e`.\n\nIf a list of strings, the list will be evaluated directly.\n\nIf a table, then the `args` field will be evaluated as a list of strings,\nevaluated with the environment variables as defined by the `env` subtable."
+    },
+    "DebuggerConfig": {
+      "properties": {
+        "support": {
+          "type": "boolean",
+          "description": "Whether this debugger configuration is supported by debugproxy."
+        },
+        "compile": {
+          "$ref": "#/$defs/CompileConfig",
+          "description": "If specified, then this overrides the main Compile config."
+        },
+        "interactive": {
+          "$ref": "#/$defs/DAPConfig",
+          "description": "The configuration for interactive debugging with a DAP adapter."
+        },
+        "dapTransport": {
+          "type": "string",
+          "description": "How the adapter exposes the DAP communication channel to the debugproxy. Legacy, please prefer `interactive` configuration instead."
+        },
+        "dapConnectTimeout": {
+          "type": "integer",
+          "description": "The number of seconds that the debugproxy will wait for the DAP adapter to initialize. Legacy, please prefer `interactive` configuration instead."
+        },
+        "dapIntegratedAdapter": {
+          "$ref": "#/$defs/DAPIntegratedAdapterConfig",
+          "description": "Indicates that the runtime environment that runs the debugee is the same one that runs the adapter. This means that the TTY should be attached to the runtime, and the DAP will be exposed through a separate channel. Legacy, please prefer `interactive` configuration instead."
+        },
+        "dapStartCommand": { "$ref": "#/$defs/DAPStartCommand" },
+        "dapInitializeMessage": {
+          "type": "object",
+          "description": "The initialize message sent to the DAP adapter. Legacy, please prefer `interactive` configuration instead."
+        },
+        "dapLaunchMessage": {
+          "type": "object",
+          "description": "The launch/attach message sent to the DAP adapter. Legacy, please prefer `interactive` configuration instead."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "Debugger configuration. Requires usage of a DAP-compatible debugger."
+    },
+    "DeploymentCheck": {
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "The path for the check. For example, `/ready`. Defaults to `/`."
+        },
+        "headers": {
+          "additionalProperties": { "type": "string" },
+          "type": "object",
+          "description": "An optional map of HTTP headers that should be added to the readiness check."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DeploymentConfig": {
+      "properties": {
+        "build": { "$ref": "#/$defs/CompileCommand" },
+        "run": { "$ref": "#/$defs/RunCommand" },
+        "ignorePorts": {
+          "type": "boolean",
+          "description": "Indicates that the Deployment will not open any ports."
+        },
+        "deploymentTarget": {
+          "type": "string",
+          "enum": [
+            "cloudrun",
+            "gce",
+            "static",
+            "scheduled",
+            "autoscale",
+            "vm",
+            "extension"
+          ],
+          "description": "The Deployment type. cloudrun and gce are deprecated."
+        },
+        "publicDir": {
+          "type": "string",
+          "description": "The root directory for static sites."
+        },
+        "ignore": {
+          "items": { "type": "string" },
+          "type": "array",
+          "description": "A list of patterns to ignore. This uses the same syntax and semantics of `.dockerignore`.||||There can also be a file called `.replitignore`, which will be honored along with this field. This may be helpful when eg symlinking an existing `.dockerignore` file to have consistent ignoring of paths, but additional Replit-specific artifacts should be ignored."
+        },
+        "preservedSymlinks": {
+          "items": { "type": "string" },
+          "type": "array",
+          "description": "The list of patterns in `.dockerignore` format that will be preserved as-is.||||By default, symlinks in the Repl result in the dereferenced link being copied to the symlink path when preparing a Deployment. The paths listed here indicate that the symlink should be preserved."
+        },
+        "health": { "$ref": "#/$defs/DeploymentHealthConfig" },
+        "responseHeaders": {
+          "items": { "$ref": "#/$defs/DeploymentHeader" },
+          "type": "array"
+        },
+        "rewrites": {
+          "items": { "$ref": "#/$defs/DeploymentRewriteRule" },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DeploymentHeader": {
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "The pattern to apply the header to."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the header to add."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the header to add."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DeploymentHealthConfig": {
+      "properties": {
+        "startup": { "$ref": "#/$defs/DeploymentCheck" },
+        "liveness": { "$ref": "#/$defs/DeploymentCheck" }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DeploymentRewriteRule": {
+      "properties": {
+        "from": { "type": "string", "description": "The pattern to rewrite." },
+        "to": { "type": "string", "description": "The new pattern." }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DotReplit": {
+      "properties": {
+        "run": { "$ref": "#/$defs/RunCommand" },
+        "onBoot": { "$ref": "#/$defs/OnBootCommand" },
+        "language": {
+          "type": "string",
+          "description": "The primary language in a repl. Deprecated and currently used to override behavior while importing from GitHub."
+        },
+        "audio": {
+          "type": "boolean",
+          "description": "Enable system-wide audio through PulseAudio."
+        },
+        "entrypoint": {
+          "type": "string",
+          "description": "The main file of the Repl. Used for determining the default file in the editor, and for constructing some shell commands, for example `run`."
+        },
+        "disableInstallBeforeRun": {
+          "type": "boolean",
+          "description": "Opt-out of installing packages before running your Repl. This implies `disableGuessImports = true`."
+        },
+        "disableGuessImports": {
+          "type": "boolean",
+          "description": "Opt-out of guessing dependencies during package installation."
+        },
+        "env": {
+          "additionalProperties": { "type": "string" },
+          "type": "object",
+          "description": "Environment variables to set globally in your Repl."
+        },
+        "compile": { "$ref": "#/$defs/CompileCommand" },
+        "debugger": { "$ref": "#/$defs/DebuggerConfig" },
+        "packager": { "$ref": "#/$defs/UPMConfig" },
+        "interpreter": { "$ref": "#/$defs/InterpConfig" },
+        "unitTest": { "$ref": "#/$defs/UnitTestConfig" },
+        "hidden": {
+          "items": { "type": "string" },
+          "type": "array",
+          "description": "A list of globs that specify which files and drectories should be hidden in the workspace."
+        },
+        "nix": { "$ref": "#/$defs/NixConfig" },
+        "languages": {
+          "additionalProperties": { "$ref": "#/$defs/DotreplitLangConfig" },
+          "type": "object",
+          "description": "Configuration of language-specific behavior."
+        },
+        "hosting": { "$ref": "#/$defs/HostingConfig" },
+        "auth": { "$ref": "#/$defs/AuthConfig" },
+        "hints": { "$ref": "#/$defs/HintsList" },
+        "ports": { "items": { "$ref": "#/$defs/Port" }, "type": "array" },
+        "gitHubImport": { "$ref": "#/$defs/GitHubImportConfig" },
+        "refreshWebViewOnFileChange": {
+          "items": { "type": "string" },
+          "type": "array",
+          "description": "A list of globs that specify files and directories that trigger a workspace WebView refresh on change."
+        },
+        "deployment": { "$ref": "#/$defs/DeploymentConfig" },
+        "objectStorage": { "$ref": "#/$defs/ObjectStorageConfig" },
+        "autoSave": { "$ref": "#/$defs/AutoSaveConfig" },
+        "modules": {
+          "items": { "type": "string" },
+          "type": "array",
+          "description": "A list of nix modules to enable in your Repl. See https://github.com/replit/nixmodules for more information."
+        },
+        "extension": { "$ref": "#/$defs/ExtensionConfig" },
+        "rules": { "$ref": "#/$defs/RulesConfig" },
+        "suggestions": { "$ref": "#/$defs/SuggestionsConfig" }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DotreplitLangConfig": {
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "description": "A glob used to match any files which are part of this language configuration."
+        },
+        "syntax": {
+          "type": "string",
+          "description": "Provides a hint to the client on how to syntax highlight files for this language."
+        },
+        "languageServer": {
+          "$ref": "#/$defs/LanguageServerConfig",
+          "description": "Lets you specify a language server implementation for this particular language."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ExtensionConfig": {
+      "properties": {
+        "isExtension": {
+          "type": "boolean",
+          "description": "Indicates that this Repl should be configured as an extension for development purposes."
+        },
+        "extensionId": {
+          "type": "string",
+          "description": "The ID of the extension published from this Repl."
+        },
+        "buildCommand": {
+          "type": "string",
+          "description": "The command to build the extension."
+        },
+        "outputDirectory": {
+          "type": "string",
+          "description": "The location of the extension's build output."
+        },
+        "staticDirectory": {
+          "type": "string",
+          "description": "The location of the extension's statically-served files. This is the directory to which assets uploaded via extension scaffolding tools will reside."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "FormatterConfig": {
+      "properties": {
+        "ID": { "type": "string", "description": "The formatter ID." }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "FormatterConfigWithPattern": {
+      "properties": {
+        "ID": { "type": "string", "description": "The formatter ID." },
+        "pattern": {
+          "type": "string",
+          "description": "The file pattern glob of which files the formatter will run on."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "FormatterRulesConfig": {
+      "properties": {
+        "patterns": {
+          "items": { "$ref": "#/$defs/FormatterConfigWithPattern" },
+          "type": "array"
+        },
+        "fileExtensions": {
+          "additionalProperties": { "$ref": "#/$defs/FormatterConfig" },
+          "type": "object",
+          "description": "A map of file extensions to formatter IDs."
+        },
+        "languages": {
+          "additionalProperties": { "$ref": "#/$defs/FormatterConfig" },
+          "type": "object",
+          "description": "A map of languages to formatter IDs."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "GitHubImportConfig": {
+      "properties": {
+        "requiredFiles": {
+          "items": { "type": "string" },
+          "type": "array",
+          "description": "A list of files that must not be removed when importing a GitHub repository to Replit."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "HintsList": {
+      "items": {
+        "properties": {
+          "regex": {
+            "type": "string",
+            "description": "A regex pattern to match against the console output."
+          },
+          "message": {
+            "type": "string",
+            "description": "A message to display if the regex pattern matches."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "HostingConfig": {
+      "properties": {
+        "route": {
+          "type": "string",
+          "description": "Specifies what route static files should be served on. Leaving empty will serve files on the root route."
+        },
+        "directory": {
+          "type": "string",
+          "description": "Specifies which directory static files should be served out of. Leaving empty will disable static hosting completely."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "InterpCommand": {
+      "anyOf": [
+        {
+          "properties": {
+            "args": { "items": { "type": "string" }, "type": "array" },
+            "env": {
+              "additionalProperties": { "type": "string" },
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": ["args"]
+        },
+        { "type": "string" },
+        { "items": { "type": "string" }, "type": "array" }
+      ],
+      "description": "The command to run that starts an interpreter for the Run button. Takes precedence over the `run` config.\n\nOne of a string, list of strings, or table.\n\nIf a string, it will be passed to the shell as `sh -c \u003cstring\u003e`.\n\nIf a list of strings, the list will be evaluated directly.\n\nIf a table, then the `args` field will be evaluated as a list of strings,\nevaluated with the environment variables as defined by the `env` subtable."
+    },
+    "InterpConfig": {
+      "properties": {
+        "command": { "$ref": "#/$defs/InterpCommand" },
+        "prompt": {
+          "items": { "type": "integer", "maximum": 255, "minimum": 0 },
+          "type": "array",
+          "description": "The prompt to tell the interpreter to use."
+        },
+        "noFileArgs": {
+          "type": "boolean",
+          "description": "Whether to disable passing a file path as the last argument to the interpreter."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "LanguageServerConfig": {
+      "properties": {
+        "start": { "$ref": "#/$defs/LanguageServerStartCommand" },
+        "configuration": {
+          "type": "object",
+          "description": "Configuration options that the client can send to the server. See https://microsoft.github.io/language-server-protocol/specification#workspace_configuration for more information."
+        },
+        "initializationOptions": {
+          "type": "object",
+          "description": "Options sent to the LSP server with the initialize request. See https://microsoft.github.io/language-server-protocol/specification#initialize for more information."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "LanguageServerStartCommand": {
+      "anyOf": [
+        {
+          "properties": {
+            "args": { "items": { "type": "string" }, "type": "array" },
+            "env": {
+              "additionalProperties": { "type": "string" },
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": ["args"]
+        },
+        { "type": "string" },
+        { "items": { "type": "string" }, "type": "array" }
+      ],
+      "description": "The shell command to start the language server for this language.\n\nOne of a string, list of strings, or table.\n\nIf a string, it will be passed to the shell as `sh -c \u003cstring\u003e`.\n\nIf a list of strings, the list will be evaluated directly.\n\nIf a table, then the `args` field will be evaluated as a list of strings,\nevaluated with the environment variables as defined by the `env` subtable."
+    },
+    "NixConfig": {
+      "properties": {
+        "channel": {
+          "type": "string",
+          "enum": [
+            "unstable",
+            "stable-21_11",
+            "stable-22_05",
+            "stable-22_11",
+            "stable-23_05",
+            "stable-23_11"
+          ],
+          "description": "The Replit-provided Nix channel to use in your Repl. If left unspecified, an old version of unstable will be used, this is for backwards compatibility."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ObjectStorageConfig": {
+      "properties": { "defaultBucketID": { "type": "string" } },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "OnBootCommand": {
+      "anyOf": [
+        {
+          "properties": {
+            "args": { "items": { "type": "string" }, "type": "array" },
+            "env": {
+              "additionalProperties": { "type": "string" },
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": ["args"]
+        },
+        { "type": "string" },
+        { "items": { "type": "string" }, "type": "array" }
+      ],
+      "description": "The command to run when the Repl boots.\n\nOne of a string, list of strings, or table.\n\nIf a string, it will be passed to the shell as `sh -c \u003cstring\u003e`.\n\nIf a list of strings, the list will be evaluated directly.\n\nIf a table, then the `args` field will be evaluated as a list of strings,\nevaluated with the environment variables as defined by the `env` subtable."
+    },
+    "Port": {
+      "properties": {
+        "allowHttpConnectMethod": {
+          "type": "string",
+          "description": "Determines whether the TCP port can be directly connected through *.repl.dev using the HTTP CONNECT method."
+        },
+        "exposeLocalhost": {
+          "type": "boolean",
+          "description": "If enabled, traffic to 0.0.0.0 is proxied to 127.0.0.1"
+        },
+        "externalPort": {
+          "type": "integer",
+          "description": "The port on the *.repl.dev host that should accept traffic for this server."
+        },
+        "localPort": {
+          "type": "integer",
+          "description": "The port the server is listening on inside the container."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "RulesConfig": {
+      "properties": { "formatter": { "$ref": "#/$defs/FormatterRulesConfig" } },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "RunCommand": {
+      "anyOf": [
+        {
+          "properties": {
+            "args": { "items": { "type": "string" }, "type": "array" },
+            "env": {
+              "additionalProperties": { "type": "string" },
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": ["args"]
+        },
+        { "type": "string" },
+        { "items": { "type": "string" }, "type": "array" }
+      ],
+      "description": "The command to run with the Run button.\n\nOne of a string, list of strings, or table.\n\nIf a string, it will be passed to the shell as `sh -c \u003cstring\u003e`.\n\nIf a list of strings, the list will be evaluated directly.\n\nIf a table, then the `args` field will be evaluated as a list of strings,\nevaluated with the environment variables as defined by the `env` subtable."
+    },
+    "SuggestionsConfig": {
+      "properties": {
+        "extensions": {
+          "items": { "type": "string" },
+          "type": "array",
+          "description": "A list of extensions to suggest to the user."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "UPMAfterInstallCommand": {
+      "anyOf": [
+        {
+          "properties": {
+            "args": { "items": { "type": "string" }, "type": "array" },
+            "env": {
+              "additionalProperties": { "type": "string" },
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": ["args"]
+        },
+        { "type": "string" },
+        { "items": { "type": "string" }, "type": "array" }
+      ],
+      "description": "The shell command to run after UPM installs your project's dependencies.\n\nOne of a string, list of strings, or table.\n\nIf a string, it will be passed to the shell as `sh -c \u003cstring\u003e`.\n\nIf a list of strings, the list will be evaluated directly.\n\nIf a table, then the `args` field will be evaluated as a list of strings,\nevaluated with the environment variables as defined by the `env` subtable."
+    },
+    "UPMConfig": {
+      "properties": {
+        "afterInstall": { "$ref": "#/$defs/UPMAfterInstallCommand" },
+        "language": {
+          "type": "string",
+          "description": "The value to pass to the --lang flag of UPM. If empty, UPM guesses the language."
+        },
+        "features": { "$ref": "#/$defs/UPMConfigFeatures" },
+        "env": {
+          "additionalProperties": { "type": "string" },
+          "type": "object",
+          "description": "Extra environment variables to set when invoking UPM. This is used, for example, to ensure UPM uses the system Python (which has Poetry installed) rather than the virtualenv Python (which does not)."
+        },
+        "ignoredPackages": {
+          "items": { "type": "string" },
+          "type": "array",
+          "description": "List of package names to be ignored when guessing dependenices."
+        },
+        "ignoredPaths": {
+          "items": { "type": "string" },
+          "type": "array",
+          "description": "Paths to ignore when guessing dependencies."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "UPM configuration. See [UPM repo](https://github.com/replit/upm) for more details."
+    },
+    "UPMConfigFeatures": {
+      "properties": {
+        "packageSearch": {
+          "type": "boolean",
+          "description": "Whether UPM supports the 'search' and 'info' commands for this language."
+        },
+        "guessImports": {
+          "type": "boolean",
+          "description": "Whether UPM supports the 'guess' command for this language."
+        },
+        "enabledForHosting": {
+          "type": "boolean",
+          "description": "Whether hosting requires running the packager before running."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "UnitTestConfig": {
+      "properties": { "language": { "type": "string" } },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

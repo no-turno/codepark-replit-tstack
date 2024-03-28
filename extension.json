@@ -1,0 +1,12 @@
+{
+	"name": "Codepark",
+	"description": "Codepark extension",
+	"icon": "/fox.svg",
+	"tools": [
+		{
+			"name": "Base tool",
+			"handler": "/tool",
+			"icon": "/fox.svg"
+		}
+	]
+}

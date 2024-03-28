@@ -1,0 +1,65 @@
+{
+  "$schema": ".schemas/Dotreplit.json",
+  "run": "bun x replkit dev",
+  "entrypoint": "src/App.jsx",
+  "hidden": [
+    ".config",
+    ".git",
+    ".gitignore"
+  ],
+  "nix": {
+    "channel": "stable-23_11"
+  },
+  "env": {
+    "PATH": "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin:/home/runner/RemarkablePartialChemistry/.cache/.bun/bin",
+    "XDG_CONFIG_HOME": "/home/runner/.config",
+    "npm_config_prefix": "/home/runner/$REPL_SLUG/.config/npm/node_global"
+  },
+  "gitHubImport": {
+    "requiredFiles": [
+      ".replit",
+      "replit.nix",
+      ".config"
+    ]
+  },
+  "packager": {
+    "language": "bun",
+    "features": {
+      "packageSearch": true,
+      "guessImports": true,
+      "enabledForHosting": false
+    }
+  },
+  "languages": {
+    "javascript": {
+      "pattern": "**/{*.js,*.jsx,*.ts,*.tsx}",
+      "languageServer": {
+        "start": "typescript-language-server --stdio"
+      }
+    },
+    "css": {
+      "pattern": "**/{*.css,*.scss}",
+      "languageServer": {
+        "start": "vscode-css-language-server --stdio"
+      }
+    },
+    "html": {
+      "pattern": "**/{*.html}",
+      "languageServer": {
+        "start": "vscode-html-language-server --stdio"
+      }
+    },
+    "eslint": {
+      "pattern": "**/{.eslintrc.{js,cjs,mjs}",
+      "languageServer": {
+        "start": "vscode-eslint-language-server --stdio"
+      }
+    }
+  },
+  "extension": {
+    "isExtension": true,
+    "buildCommand": "bun x replkit build",
+    "outputDirectory": "./dist",
+    "staticDirectory": "./public"
+  }
+}
